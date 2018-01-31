@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.graphstream.graph.Graph;
-
+import org.graphstream.graph.*;
 
 public class GenericGraph {
 
-	protected Graphics g;
+	protected SpecificGraph g;
 	protected Graph graphic;
 	protected Pathway pathway;
 
@@ -18,47 +17,48 @@ public class GenericGraph {
 	 * @param nom de la voie de signalisation
 	 **/
 	public GenericGraph(String pathName) {
-
+		this.pathway = createPathway(pathName);
+		this.g = new SpecificGraph(pathway);
+//		graphic = g.getGraphic();
+		this.graphic = g;
+	}
+	
+	public Pathway createPathway(String pathName) {
+				
 		List <Reaction> list = new ArrayList<>();
 		HashSet <Reaction> listReaction = new HashSet<Reaction>();
 		HashSet <String> listEspeces = new HashSet<String>();
+		
+		ParserKGML pars = null;
 
-		File repertoire = new File ("/Users/utilisateur/Downloads/Bacteria");
+		File repertoire = new File ("/Users/alexandrabenamar/Bacteria"); //parcourir le répertoire
 		for (File f : repertoire.listFiles()) {
-			if (f.isDirectory()) {
-				for (File file : f.listFiles()) {
-					if (file.getName().contains(pathName)) {
-						ParserKGML pars = new ParserKGML(file);
-						List <Reaction> l = pars.getReactionList();
-						listEspeces.add(file.getName().substring(5, 8));
-						for (Reaction r: l) {
-							listReaction.add(r);
-							r.addEspece(file.getName().substring(5, 8));
-						}
+			if (f.isDirectory()) {	
+				for (File file : f.listFiles()) {		//parcourir les fichiers du répertoire
+					if (file.getName().contains(pathName)) {	//recherche des fichiers de la voie 
+						pars = new ParserKGML(file);	//parse le fichier
+						List <Reaction> l = pars.getReactionList();	// obtient la liste des réactions du fichier
+						listReaction.addAll(l);
+						listEspeces.add(file.getName().substring(5, 8));	// ajoute l'espèce associée au fichier
 					}
-					
 				}
-
 			}
 		}
-		
-		list.clear();
+
 		list.addAll(listReaction);
 		
 		List <String> especes = new ArrayList<>();
 		especes.addAll(listEspeces);
-		Pathway path = new Pathway(3, pathName, "glycolyse", list, especes);
-		this.pathway = path;
-		g = new Graphics(path);		
-		graphic = g.getGraphic();
-
+		Pathway pathway = new Pathway(pars.getPathway().getNumber(), pathName, pars.getPathway().getTitle(), list, especes);
+		
+		return pathway;
 	}
 
 	/**
 	 * Recuperation du graphique
 	 * @return
 	 */
-	public Graphics getG() {
+	public SpecificGraph getG() {
 		return g;
 	}
 
@@ -66,7 +66,7 @@ public class GenericGraph {
 	 * Fixation du graphique
 	 * @param g graphique
 	 */
-	public void setG(Graphics g) {
+	public void setG(SpecificGraph g) {
 		this.g = g;
 	}
 

@@ -39,8 +39,14 @@ public class Pathway {
 	 */
 	protected List<Reaction> reactionList;
 	
+	/**
+	 * list of the pathway's species
+	 */
 	protected List<String> espece;
 	
+	/**
+	 * list of the pathway's generic map
+	 */
 	protected GenericGraph graph;
 
 
@@ -169,8 +175,6 @@ public class Pathway {
 	public void setReactionList(List<Reaction> reactionList) {
 		this.reactionList = reactionList;
 	}
-	
-	
 
 	public String getAlt_name() {
 		return alt_name;
@@ -187,7 +191,6 @@ public class Pathway {
 	public void setEspece(List<String> espece) {
 		this.espece = espece;
 	}
-	
 
 	@Override
 	public int hashCode() {

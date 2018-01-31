@@ -151,10 +151,8 @@ public class Compound {
 	 */
 	public void parsAltName() {
 
-		File repertoire = new File("/Users/utilisateur/Downloads/compounds");
-
+		File repertoire = new File("/Users/alexandrabenamar/compounds");
 		File[] fichiers = repertoire.listFiles();
-
 		for (File fichier : fichiers) { 
 			// Appel récursif sur les sous-répertoires 
 			if (fichier.getName().contains(this.name)) {
@@ -168,7 +166,6 @@ public class Compound {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
 
 		while(scanner.hasNext()){
 			String str = scanner.findInLine("NAME");

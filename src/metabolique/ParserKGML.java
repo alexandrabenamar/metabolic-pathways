@@ -19,12 +19,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+
 public class ParserKGML {
 
 	/**
 	 * Liste de reactions de la voie de signalisation
 	 */
-	static List<Reaction> reactionList;
+	private List<Reaction> reactionList;
+	
+	private Pathway pathway;
 
 	/**
 	 * Parse un fichier .kgml de KEGG
@@ -59,7 +62,7 @@ public class ParserKGML {
 					} id_list.addAll(graph_list);
 				}
 			}
-
+			
 			// Get the reaction elements
 			final NodeList reactionNodes = root.getElementsByTagName("reaction");
 			List<Reaction> reactions = new ArrayList<Reaction>();
@@ -71,10 +74,13 @@ public class ParserKGML {
 					final Element element = (Element)reactionNodes.item(j);
 					// Go through the substrates of the reaction
 					final NodeList substrateNodes = element.getElementsByTagName("substrate");
+					
 					// Creation of a substrates list for each reaction
 					List<Compound> substrates = new ArrayList<Compound>();
 					for (int k = 0; k<substrateNodes.getLength(); k++) {
+						
 						if(substrateNodes.item(k).getNodeType() == Node.ELEMENT_NODE) {
+							
 							final Element substrate_element = (Element)substrateNodes.item(k);
 							Compound substrate = new Compound (substrate_element.getAttribute("id"), substrate_element.getAttribute("name").substring(3));
 
@@ -119,11 +125,11 @@ public class ParserKGML {
 
 					// Nouvelle reaction
 					
-				//	List<String> listName = new ArrayList<String>();
 					if (element.getAttribute("name").length() == 9) {
 						Reaction reaction = new Reaction(element.getAttribute("id"), element.getAttribute("name").substring(3), element.getAttribute("type") , substrates, products);
 						reaction.setSubstrateList(substrates);
 						reaction.setProductList(products);
+						reaction.addEspece(file.getName().substring(5, 8));
 						reactions.add(reaction);
 					}
 					else {
@@ -131,25 +137,24 @@ public class ParserKGML {
 						Reaction reaction1 = new Reaction(element.getAttribute("id"), element.getAttribute("name").substring(3, 9), element.getAttribute("type") , substrates, products);
 						reaction1.setProductList(products);
 						reaction1.setSubstrateList(substrates);
+						reaction1.addEspece(file.getName().substring(5, 8));
+						reactions.add(reaction1);
 						
 						Reaction reaction2 = new Reaction(element.getAttribute("id"), element.getAttribute("name").substring(13, 19), element.getAttribute("type") , substrates, products);
 						reaction2.setSubstrateList(substrates);
 						reaction2.setProductList(products);
-						
-						reactions.add(reaction1);
+						reaction2.addEspece(file.getName().substring(5, 8));
 						reactions.add(reaction2);
-						
-					//	listName.add(element.getAttribute("name").substring(3, 9));
-					//	listName.add(element.getAttribute("name").substring(13, 19));
+
 					}
 				}
 			} // end reactions
-
+			
 			// creation of the pathway 
-			@SuppressWarnings("unused")
 			Pathway pathway = new Pathway(Integer.parseInt(root.getAttribute("number")), root.getAttribute("name").substring(5), root.getAttribute("title"), reactions);
 			this.setReactionList(reactions);
-
+			this.setPathway(pathway);
+			
 		} // end try
 
 		catch (final ParserConfigurationException e) {  // Indicates a serious configuration error
@@ -159,6 +164,14 @@ public class ParserKGML {
 		} catch (final IOException e) {  // Signals that an I/O exception of some sort has occurred.
 			e.printStackTrace();		 // This class is the general class of exceptions produced by
 		}								 // failed or interrupted I/O operations.
+	}
+	
+	public Pathway getPathway() {
+		return pathway;
+	}
+
+	public void setPathway(Pathway pathway) {
+		this.pathway = pathway;
 	}
 
 	/**

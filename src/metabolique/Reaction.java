@@ -254,7 +254,7 @@ public class Reaction {
 	 */
 	public void getEnzyme(String reactionName) {
 		
-		File repertoire = new File("/Users/utilisateur/Downloads/reactions");
+		File repertoire = new File("/Users/alexandrabenamar/reactions");
 		File[] fichiers = repertoire.listFiles();
 		
 		for (File fichier : fichiers) { 

@@ -1,0 +1,19 @@
+node {
+  size: 10px;
+  fill-mode: dyn-plain;
+  stroke-mode: plain;
+  stroke-color: black;
+  stroke-width: 1px;
+  text-alignment: under;
+  }
+  
+node.enzyme {
+  shape: box;
+  size: 10px, 10px;
+  text-alignment: under;
+  }
+  
+node.compound {
+  shape: circle;
+  text-alignment: under;
+}

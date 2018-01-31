@@ -24,9 +24,8 @@ public class Enzyme extends Reaction {
 	 */
 	Enzyme(String fileName) {
 		
-		
-		
-		File repertoire = new File("/Users/utilisateur/Downloads/reactions");
+
+		File repertoire = new File("/Users/alexandrabenamar/reactions");
 		
 		File[] fichiers = repertoire.listFiles();
 		
@@ -43,7 +42,6 @@ public class Enzyme extends Reaction {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
 
 		List <String> temp = new ArrayList<String>();
 
