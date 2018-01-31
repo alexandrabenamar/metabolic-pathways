@@ -9,5 +9,9 @@
 - Install GraphStream (version >= 1.3)
 - KEGG data files
 
+### Status
+
+In progress ...
+
 ## Author
 Alexandra Benamar
